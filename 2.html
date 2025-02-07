@@ -1,0 +1,153 @@
+<html>
+<head>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #e5e7eb;
+        }
+        .modal {
+            background-color: white;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+        }
+        .modal-header {
+            background-color: #fbbf24;
+            text-align: center;
+            color: white;
+            padding: 0.5rem;
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+            position: relative;
+        }
+        .modal-header h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        .modal-header button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+        }
+        .modal-body {
+            padding: 1.5rem;
+        }
+        .modal-body p {
+            margin-bottom: 1rem;
+        }
+        .modal-body ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .modal-body ul li {
+            margin-bottom: 0.5rem;
+        }
+        .modal-body form .form-group {
+            margin-bottom: 0.5rem;
+        }
+        .modal-body form .form-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        .modal-body form .form-group input {
+            width: 100%;
+            padding: 0.25rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+        .modal-footer button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            border: none;
+            cursor: pointer;
+        }
+        .modal-footer .cancel-btn {
+            background-color: #d1d5db;
+            color: #374151;
+            margin-right: 0.5rem;
+        }
+        .modal-footer .next-btn {
+            background-color: #3b82f6;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Add Family Members</h2>
+            <button onclick="closeModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Now we will build your family.</p>
+            <ul>
+                <li>We automatically add your parents and grandparents for you.</li>
+                <li>Tell us about your immediate family, including your brothers, sisters, children, aunts, and uncles.</li>
+                <li>You can add more family members like cousins, nieces, nephews, half siblings, and grandchildren later.</li>
+                <li>We collect information only for blood relatives, not household members, not step-relatives, nor spouses (unless related by blood).</li>
+            </ul>
+            <form>
+                <div class="form-group">
+                    <label for="brothers">How many brothers do you have?</label>
+                    <input type="number" id="brothers">
+                </div>
+                <div class="form-group">
+                    <label for="sisters">How many sisters do you have?</label>
+                    <input type="number" id="sisters">
+                </div>
+                <div class="form-group">
+                    <label for="sons">How many sons do you have?</label>
+                    <input type="number" id="sons">
+                </div>
+                <div class="form-group">
+                    <label for="daughters">How many daughters do you have?</label>
+                    <input type="number" id="daughters">
+                </div>
+                <div class="form-group">
+                    <label for="mothers-brothers">How many brothers does your mother have? (your uncles)</label>
+                    <input type="number" id="mothers-brothers">
+                </div>
+                <div class="form-group">
+                    <label for="mothers-sisters">How many sisters does your mother have? (your aunts)</label>
+                    <input type="number" id="mothers-sisters">
+                </div>
+                <div class="form-group">
+                    <label for="fathers-brothers">How many brothers does your father have? (your uncles)</label>
+                    <input type="number" id="fathers-brothers">
+                </div>
+                <div class="form-group">
+                    <label for="fathers-sisters">How many sisters does your father have? (your aunts)</label>
+                    <input type="number" id="fathers-sisters">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="next-btn">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function closeModal() {
+            document.querySelector('.modal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

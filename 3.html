@@ -1,0 +1,173 @@
+<html>
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .tree ul {
+            padding-top: 20px; 
+            position: relative;
+            transition: all 0.5s;
+        }
+
+        .tree li {
+            float: left; 
+            text-align: center;
+            list-style-type: none;
+            position: relative;
+            padding: 20px 5px 0 5px;
+            transition: all 0.5s;
+        }
+
+        .tree li::before, .tree li::after {
+            content: '';
+            position: absolute; 
+            top: 0; 
+            right: 50%;
+            border-top: 1px solid #ccc;
+            width: 50%; 
+            height: 20px;
+        }
+
+        .tree li::after {
+            right: auto; 
+            left: 50%;
+            border-left: 1px solid #ccc;
+        }
+
+        .tree li:only-child::after, .tree li:only-child::before {
+            display: none;
+        }
+
+        .tree li:only-child { 
+            padding-top: 0;
+        }
+
+        .tree li:first-child::before, .tree li:last-child::after {
+            border: 0 none;
+        }
+
+        .tree li:last-child::before {
+            border-right: 1px solid #ccc;
+            border-radius: 0 5px 0 0;
+        }
+
+        .tree li:first-child::after {
+            border-radius: 5px 0 0 0;
+        }
+
+        .tree ul ul::before {
+            content: '';
+            position: absolute; 
+            top: 0; 
+            left: 50%;
+            border-left: 1px solid #ccc;
+            width: 0; 
+            height: 20px;
+        }
+
+        .tree li a {
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            text-decoration: none;
+            color: #666;
+            font-family: arial, verdana, tahoma;
+            font-size: 11px;
+            display: inline-block;
+            border-radius: 5px;
+            transition: all 0.5s;
+        }
+
+        .tree li a:hover, .tree li a:hover+ul li a {
+            background: #c8e4f8; 
+            color: #000; 
+            border: 1px solid #94a0b4;
+        }
+
+        .tree li a:hover+ul li::after, 
+        .tree li a:hover+ul li::before, 
+        .tree li a:hover+ul::before, 
+        .tree li a:hover+ul ul::before {
+            border-color:  #94a0b4;
+        }
+    </style>
+</head>
+<body class="bg-white p-4">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-4">
+            <button class="bg-orange-500 text-white px-4 py-2 rounded">Check Your Familial Risk</button>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded">Get Help For This Page</button>
+        </div>
+        <div class="border p-4 mb-4">
+            <h2 class="font-bold mb-2">Manage your data</h2>
+            <div class="space-y-2">
+                <button class="bg-red-500 text-white px-4 py-2 rounded">Save Data</button>
+                <button class="bg-blue-500 text-white px-4 py-2 rounded">Share Data</button>
+                <button class="bg-blue-500 text-white px-4 py-2 rounded">Start Over</button>
+            </div>
+            <p class="text-red-500 mt-2">You have unsaved data!</p>
+        </div>
+        <div class="border p-4 mb-4">
+            <h2 class="font-bold mb-2">View and print data</h2>
+            <div class="space-y-2">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded">Pedigree Drawing</button>
+                <button class="bg-blue-500 text-white px-4 py-2 rounded">Family Health Table</button>
+            </div>
+        </div>
+        <div class="border p-4 mb-4">
+            <h2 class="font-bold mb-2">Edit your family and health histories</h2>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded mb-2">Add a Family Member</button>
+            <p>Click <i class="fas fa-pencil-alt"></i> in the table below to make changes to a family member’s information and health history.</p>
+            <p>Click <i class="fas fa-trash-alt"></i> in the table below to remove a family member and their data.</p>
+            <p class="mt-2">Remember to click the “Save Data” button above if you want to save your changes for future use.</p>
+        </div>
+        <div class="overflow-x-auto">
+            <div class="tree">
+                <ul>
+                    <li>
+                        <a href="#">abc (Self) <span class="text-green-500">Yes</span> <i class="fas fa-pencil-alt ml-2"></i></a>
+                        <ul class="flex justify-between">
+                            <li>
+                                <a href="#">Father <i class="fas fa-pencil-alt ml-2"></i></a>
+                                <ul>
+                                    <li>
+                                        <a href="#">Paternal Grandfather <i class="fas fa-pencil-alt ml-2"></i> <i class="fas fa-trash-alt ml-2"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Paternal Grandmother <i class="fas fa-pencil-alt ml-2"></i> <i class="fas fa-trash-alt ml-2"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Paternal Aunt <i class="fas fa-pencil-alt ml-2"></i> <i class="fas fa-trash-alt ml-2"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Paternal Aunt <i class="fas fa-pencil-alt ml-2"></i> <i class="fas fa-trash-alt ml-2"></i></a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Mother <i class="fas fa-pencil-alt ml-2"></i></a>
+                                <ul>
+                                    <li>
+                                        <a href="#">Maternal Grandfather <i class="fas fa-pencil-alt ml-2"></i> <i class="fas fa-trash-alt ml-2"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Maternal Grandmother <i class="fas fa-pencil-alt ml-2"></i> <i class="fas fa-trash-alt ml-2"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Maternal Uncle <i class="fas fa-pencil-alt ml-2"></i> <i class="fas fa-trash-alt ml-2"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Maternal Uncle <i class="fas fa-pencil-alt ml-2"></i> <i class="fas fa-trash-alt ml-2"></i></a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Brother <i class="fas fa-pencil-alt ml-2"></i></a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
