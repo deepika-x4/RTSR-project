@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Upload | Family Health Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .dropzone {
+            border: 2px dashed #3b82f6;
+            transition: all 0.3s ease;
+        }
+        .dropzone.active {
+            border-color: #10b981;
+            background-color: #f0fdf4;
+        }
+        .document-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <div>
+                        <a href="index.html" class="flex items-center py-4 px-2">
+                            <i class="fas fa-heartbeat text-blue-600 text-2xl mr-2"></i>
+                            <span class="font-semibold text-gray-900 text-lg">Family Health</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="personal.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-600 transition duration-300">
+                        <i class="fas fa-user mr-1"></i> Personal
+                    </a>
+                    <a href="family.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-600 transition duration-300">
+                        <i class="fas fa-users mr-1"></i> Family
+                    </a>
+                    <a href="upload.html" class="py-4 px-2 text-blue-600 border-b-4 border-blue-600 font-semibold">
+                        <i class="fas fa-file-upload mr-1"></i> Documents
+                    </a>
+                    <a href="family-tree.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-600 transition duration-300">
+                        <i class="fas fa-project-diagram mr-1"></i> Family Tree
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-12 max-w-4xl">
+        <div class="bg-white rounded-xl shadow-xl overflow-hidden">
+            <!-- Page Header -->
+            <div class="bg-blue-600 text-white px-8 py-6">
+                <div class="flex items-center">
+                    <i class="fas fa-file-medical text-3xl mr-4"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">Health Documents</h1>
+                        <p class="text-blue-100">Upload medical reports, prescriptions, and health records</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Indicator -->
+            <div class="bg-blue-50 px-8 py-4 border-b border-blue-100">
+                <div class="flex items-center">
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 75%"></div>
+                    </div>
+                    <span class="ml-4 text-sm font-medium text-blue-700">75% Complete</span>
+                </div>
+            </div>
+
+            <!-- Document Upload Section -->
+            <div class="px-8 py-6">
+                <h2 class="text-xl font-semibold mb-6 flex items-center text-gray-700">
+                    <i class="fas fa-cloud-upload-alt text-blue-500 mr-2"></i>
+                    Upload Documents
+                </h2>
+
+                <!-- Dropzone -->
+                <div id="dropzone" class="dropzone rounded-lg p-12 text-center mb-8 cursor-pointer">
+                    <div class="flex flex-col items-center justify-center">
+                        <i class="fas fa-file-upload text-5xl text-blue-500 mb-4"></i>
+                        <h3 class="text-lg font-medium text-gray-700 mb-1">Drag & drop files here</h3>
+                        <p class="text-gray-500 mb-4">or click to browse your files</p>
+                        <input type="file" id="fileInput" class="hidden" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                        <button id="browseBtn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
+                            Select Files
+                        </button>
+                        <p class="text-xs text-gray-400 mt-4">Supported formats: PDF, JPG, PNG, DOC (Max 10MB each)</p>
+                    </div>
+                </div>
+
+                <!-- Upload Progress -->
+                <div id="uploadProgress" class="hidden mb-8">
+                    <div class="flex justify-between text-sm text-gray-600 mb-2">
+                        <span>Uploading...</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="progressBar" class="progress-bar bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Uploaded Documents -->
+                <div>
+                    <h2 class="text-xl font-semibold mb-4 flex items-center text-gray-700">
+                        <i class="fas fa-folder-open text-blue-500 mr-2"></i>
+                        Your Documents
+                    </h2>
+
+                    <div id="documentsList" class="space-y-3">
+                        <!-- Sample document (will be populated by JS) -->
+                        <div class="document-card bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center transition duration-300">
+                            <div class="bg-blue-100 text-blue-800 rounded-lg w-12 h-12 flex items-center justify-center mr-4">
+                                <i class="fas fa-file-pdf text-xl"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="text-sm font-medium text-gray-800 truncate">Medical_Report_2023.pdf</h3>
+                                <p class="text-xs text-gray-500">Uploaded: 2 days ago • 2.4 MB</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="text-blue-500 hover:text-blue-700 p-2">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-red-500 hover:text-red-700 p-2">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Document Categories -->
+                    <div class="mt-8">
+                        <h2 class="text-xl font-semibold mb-4 flex items-center text-gray-700">
+                            <i class="fas fa-tags text-blue-500 mr-2"></i>
+                            Organize by Category
+                        </h2>
+
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div class="bg-blue-50 border border-blue-100 rounded-lg p-4">
+                                <div class="flex items-center mb-2">
+                                    <div class="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                                        <i class="fas fa-file-prescription text-sm"></i>
+                                    </div>
+                                    <h3 class="font-medium">Prescriptions</h3>
+                                </div>
+                                <p class="text-sm text-gray-600">Upload medication prescriptions</p>
+                            </div>
+                            <div class="bg-green-50 border border-green-100 rounded-lg p-4">
+                                <div class="flex items-center mb-2">
+                                    <div class="bg-green-100 text-green-800 rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                                        <i class="fas fa-file-medical text-sm"></i>
+                                    </div>
+                                    <h3 class="font-medium">Test Results</h3>
+                                </div>
+                                <p class="text-sm text-gray-600">Lab reports and diagnostics</p>
+                            </div>
+                            <div class="bg-purple-50 border border-purple-100 rounded-lg p-4">
+                                <div class="flex items-center mb-2">
+                                    <div class="bg-purple-100 text-purple-800 rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                                        <i class="fas fa-procedures text-sm"></i>
+                                    </div>
+                                    <h3 class="font-medium">Medical History</h3>
+                                </div>
+                                <p class="text-sm text-gray-600">Past treatments and records</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex flex-col sm:flex-row justify-between items-center pt-8 border-t border-gray-200 mt-8">
+                    <a href="family.html" class="px-6 py-3 text-gray-600 font-medium rounded-lg hover:bg-gray-100 transition duration-300 mb-4 sm:mb-0">
+                        <i class="fas fa-arrow-left mr-2"></i> Back to Family
+                    </a>
+                    <a href="family-tree.html" class="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-300 shadow-md hover:shadow-lg">
+                        View Family Tree <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-xl font-bold">Family Health Portal</h3>
+                    <p class="text-gray-400 mt-1">Keeping your family's health organized</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+                <p>© 2023 Family Health Portal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

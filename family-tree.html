@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Tree | Family Health Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/orgchart@3.1.0/dist/js/orgchart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        #tree {
+            width: 100%;
+            height: 600px;
+            background: #f8fafc;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .orgchart .node .title {
+            font-size: 14px;
+            border-radius: 4px;
+            background-color: #3b82f6;
+            color: white;
+            border: 1px solid #2563eb;
+        }
+        .orgchart .node .content {
+            font-size: 12px;
+            border-radius: 0 0 4px 4px;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-top: none;
+        }
+        .health-good {
+            background-color: #10b981 !important;
+            border-color: #059669 !important;
+        }
+        .health-fair {
+            background-color: #f59e0b !important;
+            border-color: #d97706 !important;
+        }
+        .health-poor {
+            background-color: #ef4444 !important;
+            border-color: #dc2626 !important;
+        }
+        .zoom-controls {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            z-index: 100;
+        }
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <div>
+                        <a href="index.html" class="flex items-center py-4 px-2">
+                            <i class="fas fa-heartbeat text-blue-600 text-2xl mr-2"></i>
+                            <span class="font-semibold text-gray-900 text-lg">Family Health</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="personal.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-600 transition duration-300">
+                        <i class="fas fa-user mr-1"></i> Personal
+                    </a>
+                    <a href="family.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-600 transition duration-300">
+                        <i class="fas fa-users mr-1"></i> Family
+                    </a>
+                    <a href="health-risks.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-600 transition duration-300">
+                        <i class="fas fa-chart-line mr-1"></i> Health Risks
+                    </a>
+                    <a href="wellness.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-600 transition duration-300">
+                        <i class="fas fa-heartbeat mr-1"></i> Wellness
+                    </a>
+                    <a href="upload.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-600 transition duration-300">
+                        <i class="fas fa-file-upload mr-1"></i> Documents
+                    </a>
+                    <a href="family-tree.html" class="py-4 px-2 text-blue-600 border-b-4 border-blue-600 font-semibold">
+                        <i class="fas fa-project-diagram mr-1"></i> Family Tree
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <div class="bg-white rounded-xl shadow-xl overflow-hidden mb-8">
+            <!-- Page Header -->
+            <div class="bg-blue-600 text-white px-8 py-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-project-diagram text-3xl mr-4"></i>
+                        <div>
+                            <h1 class="text-2xl font-bold">Family Health Tree</h1>
+                            <p class="text-blue-100">Visualize your family relationships and health history</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="exportBtn" class="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50 transition duration-300">
+                            <i class="fas fa-download mr-2"></i> Export
+                        </button>
+                        <button id="printBtn" class="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50 transition duration-300 ml-2">
+                            <i class="fas fa-print mr-2"></i> Print
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Indicator -->
+            <div class="bg-blue-50 px-8 py-4 border-b border-blue-100">
+                <div class="flex items-center">
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 100%"></div>
+                    </div>
+                    <span class="ml-4 text-sm font-medium text-blue-700">100% Complete</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Family Tree Visualization -->
+        <div class="bg-white rounded-xl shadow-xl overflow-hidden mb-8">
+            <div class="p-4">
+                <div class="flex flex-wrap items-center justify-between mb-4">
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800">Your Family Health Overview</h2>
+                        <p class="text-sm text-gray-500">Click on family members to view details</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <div class="flex items-center mr-4">
+                            <div class="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
+                            <span class="text-xs">Good Health</span>
+                        </div>
+                        <div class="flex items-center mr-4">
+                            <div class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                            <span class="text-xs">Fair Health</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
+                            <span class="text-xs">Poor Health</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <div id="tree"></div>
+                    <div class="zoom-controls flex flex-col space-y-2">
+                        <button id="zoomIn" class="p-2 bg-white rounded-full shadow-md hover:bg-gray-100">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                        <button id="zoomOut" class="p-2 bg-white rounded-full shadow-md hover:bg-gray-100">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                        <button id="fit" class="p-2 bg-white rounded-full shadow-md hover:bg-gray-100">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                    <div id="tooltip" class="tooltip"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Health Summary -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="bg-green-100 px-6 py-4">
+                    <h3 class="font-semibold text-green-800 flex items-center">
+                        <i class="fas fa-heartbeat mr-2"></i> Good Health
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <div class="text-3xl font-bold text-green-600 mb-2" id="goodHealthCount">3</div>
+                    <p class="text-sm text-gray-600">Family members in good health</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="bg-yellow-100 px-6 py-4">
+                    <h3 class="font-semibold text-yellow-800 flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-2"></i> Fair Health
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <div class="text-3xl font-bold text-yellow-600 mb-2" id="fairHealthCount">1</div>
+                    <p class="text-sm text-gray-600">Family members with some health concerns</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="bg-red-100 px-6 py-4">
+                    <h3 class="font-semibold text-red-800 flex items-center">
+                        <i class="fas fa-procedures mr-2"></i> Poor Health
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <div class="text-3xl font-bold text-red-600 mb-2" id="poorHealthCount">0</div>
+                    <p class="text-sm text-gray-600">Family members with serious conditions</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex flex-col sm:flex-row justify-between items-center pt-6 border-t border-gray-200">
+            <a href="upload.html" class="px-6 py-3 text-gray-600 font-medium rounded-lg hover:bg-gray-100 transition duration-300 mb-4 sm:mb-0">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Documents
+            </a>
+            <a href="index.html" class="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition duration-300 shadow-md hover:shadow-lg">
+                Return to Dashboard <i class="fas fa-home ml-2"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-xl font-bold">Family Health Portal</h3>
+                    <p class="text-gray-400 mt-1">Keeping your family's health organized</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+                <p>© 2023 Family Health Portal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sample data - in a real app this would come from localStorage/API
+        const familyData = {
+            id: "1",
+            name: "John Doe",
+            health: "good",
+            relation: "Self",
+            dob: "1980-05-15",
+            notes: "No known health issues",
+            children: [
+                {
+                    id: "2",
+                    name: "Jane Doe",
+                    health: "good",
+                    relation: "Spouse",
+                    dob: "1982-08-20",
+                    notes: "Allergic to penicillin"
+                },
+                {
+                    id: "3",
+                    name: "Mike Doe",
+                    health: "good",
+                    relation: "Child",
+                    dob: "2010-03-10",
+                    notes: "Asthma (mild)"
+                },
+                {
+                    id: "4",
+                    name: "Sarah Doe",
+                    health: "fair",
+                    relation: "Child",
+                    dob: "2012-11-05",
+                    notes: "Type 1 Diabetes"
+                }
+            ],
+            parents: [
+                {
+                    id: "5",
+                    name: "Robert Doe",
+                    health: "fair",
+                    relation: "Father",
+                    dob: "1955-07-30",
+                    notes: "High blood pressure"
+                },
+                {
+                    id: "6",
+                    name: "Mary Doe",
+                    health: "good",
+                    relation: "Mother",
+                    dob: "1958-02-14",
+                    notes: "No significant issues"
+                }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get disease risks from localStorage
+            const appData = JSON.parse(localStorage.getItem('familyHealthData') || '{}');
+            const diseaseRisks = appData.diseaseRisks || {};
+            
+            // Initialize org chart
+            const chart = new OrgChart(document.getElementById('tree'), {
+                data: formatFamilyData(familyData),
+                nodeContent: 'content',
+                draggable: true,
+                zoom: true,
+                pan: true,
+                nodeBinding: {
+                    field_0: 'name',
+                    field_1: 'relation',
+                    field_2: 'healthStatus'
+                },
+                createNode: function(node, data) {
+                    const healthClass = getHealthClass(data.health);
+                    node.querySelector('.title').classList.add(healthClass);
+                    
+                    // Add disease risk indicators
+                    if (data.conditions && data.conditions.length > 0) {
+                        const riskIndicator = document.createElement('div');
+                        riskIndicator.className = 'absolute -top-2 -right-2 w-5 h-5 rounded-full bg-purple-500 text-white text-xs flex items-center justify-center';
+                        riskIndicator.textContent = data.conditions.length;
+                        node.querySelector('.title').appendChild(riskIndicator);
+                    }
+                    
+                    // Add click event for tooltip
+                    node.addEventListener('mouseenter', function(e) {
+                        const tooltip = document.getElementById('tooltip');
+                        let tooltipContent = `
+                            <div class="font-bold">${data.name}</div>
+                            <div>${data.relation}</div>
+                            <div>DOB: ${data.dob}</div>
+                            <div class="mt-1">${data.notes}</div>
+                        `;
+                        
+                        // Add disease risks if any
+                        if (data.conditions && data.conditions.length > 0) {
+                            tooltipContent += `<div class="mt-2 pt-2 border-t border-gray-200">
+                                <div class="font-semibold text-purple-600">Health Risks:</div>
+                                <ul class="list-disc pl-5 mt-1">`;
+                            
+                            data.conditions.forEach(condition => {
+                                const risk = diseaseRisks[condition] || '0.00';
+                                tooltipContent += `<li>${condition} (${(risk * 100).toFixed(0)}% risk)</li>`;
+                            });
+                            
+                            tooltipContent += `</ul></div>`;
+                        }
+                        
+                        tooltip.innerHTML = tooltipContent;
+                        tooltip.style.left = (e.pageX + 10) + 'px';
+                        tooltip.style.top = (e.pageY + 10) + 'px';
+                        tooltip.style.opacity = '1';
+                    });
+                    
+                    node.addEventListener('mouseleave', function() {
+                        const tooltip = document.getElementById('tooltip');
+                        tooltip.style.opacity = '0';
+                    });
+                }
+            });
+
+            // Zoom controls
+            document.getElementById('zoomIn').addEventListener('click', function() {
+                chart.zoomIn();
+            });
+            
+            document.getElementById('zoomOut').addEventListener('click', function() {
+                chart.zoomOut();
+            });
+            
+            document.getElementById('fit').addEventListener('click', function() {
+                chart.fit();
+            });
+
+            // Update health counters
+            updateHealthCounters(familyData);
+        });
+
+        function formatFamilyData(data) {
+            const nodes = [];
+            
+            // Add self
+            nodes.push({
+                id: data.id,
+                name: data.name,
+                relation: data.relation,
+                health: data.health,
+                healthStatus: getHealthStatusText(data.health),
+                dob: data.dob,
+                notes: data.notes
+            });
+            
+            // Add spouse if exists
+            const spouse = data.children?.find(c => c.relation === 'Spouse');
+            if (spouse) {
+                nodes.push({
+                    id: spouse.id,
+                    pid: data.id,
+                    name: spouse.name,
+                    relation: spouse.relation,
+                    health: spouse.health,
+                    healthStatus: getHealthStatusText(spouse.health),
+                    dob: spouse.dob,
+                    notes: spouse.notes
+                });
+            }
+            
+            // Add children
+            data.children?.filter(c => c.relation !== 'Spouse').forEach(child => {
+                nodes.push({
+                    id: child.id,
+                    pid: spouse ? spouse.id : data.id,
+                    name: child.name,
+                    relation: child.relation,
+                    health: child.health,
+                    healthStatus: getHealthStatusText(child.health),
+                    dob: child.dob,
+                    notes: child.notes
+                });
+            });
+            
+            // Add parents
+            data.parents?.forEach(parent => {
+                nodes.push({
+                    id: parent.id,
+                    pid: data.id,
+                    name: parent.name,
+                    relation: parent.relation,
+                    health: parent.health,
+                    healthStatus: getHealthStatusText(parent.health),
+                    dob: parent.dob,
+                    notes: parent.notes
+                });
+            });
+            
+            return nodes;
+        }
+
+        function getHealthClass(health) {
+            switch(health) {
+                case 'good': return 'health-good';
+                case 'fair': return 'health-fair';
+                case 'poor': return 'health-poor';
+                default: return '';
+            }
+        }
+
+        function getHealthStatusText(health) {
+            switch(health) {
+                case 'good': return 'Good Health';
+                case 'fair': return 'Fair Health';
+                case 'poor': return 'Poor Health';
+                default: return '';
+            }
+        }
+
+        function updateHealthCounters(data) {
+            let good = 0, fair = 0, poor = 0;
+            
+            function countHealth(person) {
+                switch(person.health) {
+                    case 'good': good++; break;
+                    case 'fair': fair++; break;
+                    case 'poor': poor++; break;
+                }
+                
+                if (person.children) {
+                    person.children.forEach(countHealth);
+                }
+                
+                if (person.parents) {
+                    person.parents.forEach(countHealth);
+                }
+            }
+            
+            countHealth(data);
+            
+            document.getElementById('goodHealthCount').textContent = good;
+            document.getElementById('fairHealthCount').textContent = fair;
+            document.getElementById('poorHealthCount').textContent = poor;
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Visualize disease risks
+        document.addEventListener('DOMContentLoaded', function() {
+            const appData = JSON.parse(localStorage.getItem('familyHealthData') || '{}');
+            const diseaseRisks = appData.diseaseRisks || {};
+            
+            // Update risk count
+            document.getElementById('diseaseRiskCount').textContent = Object.keys(diseaseRisks).length;
+            
+            // Create top risks chart
+            if (Object.keys(diseaseRisks).length > 0) {
+                const sortedRisks = Object.entries(diseaseRisks)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+                
+                const ctx = document.getElementById('topRisksChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: sortedRisks.map(item => item[0]),
+                        datasets: [{
+                            label: 'Inheritance Probability',
+                            data: sortedRisks.map(item => item[1] * 100),
+                            backgroundColor: '#8b5cf6',
+                            borderColor: '#7c3aed',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Probability (%)'
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                // Populate risk list
+                const riskList = document.getElementById('diseaseRiskList');
+                Object.entries(diseaseRisks).forEach(([disease, risk]) => {
+                    const item = document.createElement('div');
+                    item.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg';
+                    item.innerHTML = `
+                        <div class="font-medium">${disease}</div>
+                        <div class="flex items-center">
+                            <div class="w-32 bg-gray-200 rounded-full h-2.5 mr-3">
+                                <div class="bg-purple-600 h-2.5 rounded-full" 
+                                     style="width: ${risk * 100}%"></div>
+                            </div>
+                            <span class="text-sm font-bold">${(risk * 100).toFixed(0)}%</span>
+                        </div>
+                    `;
+                    riskList.appendChild(item);
+                });
+            } else {
+                document.getElementById('diseaseRiskList').innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-info-circle text-3xl mb-2"></i>
+                        <p>No disease risks identified yet</p>
+                        <p class="text-sm mt-2">Upload medical documents to analyze health risks</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

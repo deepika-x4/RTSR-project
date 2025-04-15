@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Risks | Family Health Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .risk-card {
+            transition: all 0.3s ease;
+        }
+        .risk-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <div>
+                        <a href="index.html" class="flex items-center py-4 px-2">
+                            <i class="fas fa-heartbeat text-blue-600 text-2xl mr-2"></i>
+                            <span class="font-semibold text-gray-900 text-lg">Family Health</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="personal.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-600 transition duration-300">
+                        <i class="fas fa-user mr-1"></i> Personal
+                    </a>
+                    <a href="family.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-600 transition duration-300">
+                        <i class="fas fa-users mr-1"></i> Family
+                    </a>
+                    <a href="health-risks.html" class="py-4 px-2 text-blue-600 border-b-4 border-blue-600 font-semibold">
+                        <i class="fas fa-chart-line mr-1"></i> Health Risks
+                    </a>
+                    <a href="wellness.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-600 transition duration-300">
+                        <i class="fas fa-heartbeat mr-1"></i> Wellness
+                    </a>
+                    <a href="upload.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-600 transition duration-300">
+                        <i class="fas fa-file-upload mr-1"></i> Documents
+                    </a>
+                    <a href="family-tree.html" class="py-4 px-2 text-gray-500 font-semibold hover:text-blue-600 transition duration-300">
+                        <i class="fas fa-project-diagram mr-1"></i> Family Tree
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-12 max-w-6xl">
+        <div class="bg-white rounded-xl shadow-xl overflow-hidden">
+            <!-- Page Header -->
+            <div class="bg-blue-600 text-white px-8 py-6">
+                <div class="flex items-center">
+                    <i class="fas fa-chart-line text-3xl mr-4"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">Health Risk Assessment</h1>
+                        <p class="text-blue-100">Understand your genetic predisposition to health conditions</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Summary -->
+            <div class="px-8 py-6">
+                <h2 class="text-xl font-semibold mb-4 flex items-center text-gray-700">
+                    <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+                    Your Health Risk Summary
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <!-- Risk Overview Card -->
+                    <div class="risk-card bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-blue-100 text-blue-800 rounded-full w-10 h-10 flex items-center justify-center mr-3">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <h3 class="font-semibold text-gray-800">Risk Overview</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Highest Risk Condition</span>
+                                <span class="font-medium" id="highestRiskCondition">Loading...</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Average Risk Level</span>
+                                <span class="font-medium" id="averageRiskLevel">Loading...</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Conditions Monitored</span>
+                                <span class="font-medium" id="conditionsCount">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Risk Factors Card -->
+                    <div class="risk-card bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-red-100 text-red-800 rounded-full w-10 h-10 flex items-center justify-center mr-3">
+                                <i class="fas fa-dna"></i>
+                            </div>
+                            <h3 class="font-semibold text-gray-800">Key Risk Factors</h3>
+                        </div>
+                        <ul class="space-y-2" id="riskFactorsList">
+                            <li class="flex items-center">
+                                <i class="fas fa-circle text-xs text-red-500 mr-2"></i>
+                                <span>Family history of cardiovascular disease</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-circle text-xs text-red-500 mr-2"></i>
+                                <span>Genetic predisposition to diabetes</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Risk Chart -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center text-gray-700">
+                        <i class="fas fa-chart-bar text-blue-500 mr-2"></i>
+                        Condition Probability Chart
+                    </h2>
+                    <div class="bg-white p-4 rounded-lg border border-gray-200">
+                        <canvas id="riskChart" height="300"></canvas>
+                    </div>
+                </div>
+
+                <!-- Detailed Risks -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center text-gray-700">
+                        <i class="fas fa-clipboard-list text-blue-500 mr-2"></i>
+                        Detailed Risk Assessment
+                    </h2>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Condition</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Probability</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Risk Level</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recommended Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200" id="riskDetailsBody">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Prevention Resources -->
+                <div>
+                    <h2 class="text-xl font-semibold mb-4 flex items-center text-gray-700">
+                        <i class="fas fa-shield-alt text-green-500 mr-2"></i>
+                        Prevention Resources
+                    </h2>
+                    
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <a href="wellness.html" class="risk-card bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-300">
+                            <div class="text-green-500 mb-2">
+                                <i class="fas fa-heartbeat text-2xl"></i>
+                            </div>
+                            <h3 class="font-medium text-gray-800 mb-1">Wellness Plan</h3>
+                            <p class="text-sm text-gray-600">Get personalized diet and exercise recommendations</p>
+                        </a>
+                        
+                        <a href="#" class="risk-card bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-300">
+                            <div class="text-blue-500 mb-2">
+                                <i class="fas fa-calendar-check text-2xl"></i>
+                            </div>
+                            <h3 class="font-medium text-gray-800 mb-1">Screening Schedule</h3>
+                            <p class="text-sm text-gray-600">Recommended medical tests based on your risks</p>
+                        </a>
+                        
+                        <a href="#" class="risk-card bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-300">
+                            <div class="text-purple-500 mb-2">
+                                <i class="fas fa-book-medical text-2xl"></i>
+                            </div>
+                            <h3 class="font-medium text-gray-800 mb-1">Educational Materials</h3>
+                            <p class="text-sm text-gray-600">Learn more about your health risks</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-xl font-bold">Family Health Portal</h3>
+                    <p class="text-gray-400 mt-1">Keeping your family's health organized</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+                <p>© 2023 Family Health Portal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get health data
+            const appData = JSON.parse(localStorage.getItem('familyHealthData'));
+            const risks = appData.diseaseRisks || {};
+            
+            // Update summary
+            if (Object.keys(risks).length > 0) {
+                const highestRisk = Object.entries(risks).reduce((a, b) => a[1] > b[1] ? a : b);
+                document.getElementById('highestRiskCondition').textContent = `${highestRisk[0]} (${(highestRisk[1] * 100).toFixed(0)}%)`;
+                
+                const averageRisk = Object.values(risks).reduce((a, b) => a + parseFloat(b), 0) / Object.keys(risks).length;
+                document.getElementById('averageRiskLevel').textContent = `${(averageRisk * 100).toFixed(0)}%`;
+                
+                document.getElementById('conditionsCount').textContent = Object.keys(risks).length;
+                
+                // Populate risk details table
+                const tableBody = document.getElementById('riskDetailsBody');
+                tableBody.innerHTML = '';
+                
+                Object.entries(risks).forEach(([condition, probability]) => {
+                    const row = document.createElement('tr');
+                    
+                    // Determine risk level
+                    let riskLevel = 'Low';
+                    let riskClass = 'bg-green-100 text-green-800';
+                    if (probability > 0.5) {
+                        riskLevel = 'High';
+                        riskClass = 'bg-red-100 text-red-800';
+                    } else if (probability > 0.3) {
+                        riskLevel = 'Medium';
+                        riskClass = 'bg-yellow-100 text-yellow-800';
+                    }
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">${condition}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${(probability * 100).toFixed(0)}%</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs rounded-full ${riskClass}">${riskLevel}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <a href="wellness.html?condition=${encodeURIComponent(condition)}" class="text-blue-600 hover:underline">View recommendations</a>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+                
+                // Create chart
+                const ctx = document.getElementById('riskChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(risks),
+                        datasets: [{
+                            label: 'Probability',
+                            data: Object.values(risks).map(p => p * 100),
+                            backgroundColor: Object.values(risks).map(p => {
+                                if (p > 0.5) return 'rgba(239, 68, 68, 0.7)';
+                                if (p > 0.3) return 'rgba(234, 179, 8, 0.7)';
+                                return 'rgba(16, 185, 129, 0.7)';
+                            }),
+                            borderColor: Object.values(risks).map(p => {
+                                if (p > 0.5) return 'rgba(239, 68, 68, 1)';
+                                if (p > 0.3) return 'rgba(234, 179, 8, 1)';
+                                return 'rgba(16, 185, 129, 1)';
+                            }),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Probability (%)'
+                                },
+                                max: 100
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
